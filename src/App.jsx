@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { RestrictedRoute } from "./components/RestrictedRoute";
 import { refreshUser } from "./redux/auth/operations";
 import { useAuth } from "./hooks/useAuth";
 import "./App.css";
-import { Register } from "./components/Register";
-import { Login } from "./components/Login";
+import { Home } from "./components/Home";
+import Login from "./components/Login";
 
 export default function App() {
 	const dispatch = useDispatch();
 	const { isRefreshing } = useAuth();
-	const [isRegistering, setIsRegistering] = useState(true);
 
 	useEffect(() => {
 		dispatch(refreshUser());
@@ -18,31 +20,29 @@ export default function App() {
 	return isRefreshing ? (
 		<b>Refreshing user...</b>
 	) : (
-		<div className="App">
-			{isRegistering ? <Register /> : <Login />}
-			<p>
-				{isRegistering ? (
-					<>
-						Already registered? Then{" "}
-						<a
-							href="#"
-							onClick={() => setIsRegistering(false)}
-						>
-							Log in
-						</a>
-					</>
-				) : (
-					<>
-						Not registered yet?{" "}
-						<a
-							href="#"
-							onClick={() => setIsRegistering(true)}
-						>
-							Register
-						</a>
-					</>
-				)}
-			</p>
-		</div>
+		<Routes>
+			<Route
+				path="/"
+				element={
+					<PrivateRoute
+						redirectTo="login"
+						component={<Home />}
+					/>
+				}
+			/>
+			<Route
+				path="login"
+				element={
+					<RestrictedRoute
+						redirectTo="/"
+						component={<Login />}
+					/>
+				}
+			/>
+			<Route
+				path="*"
+				element={<Home />}
+			/>
+		</Routes>
 	);
 }

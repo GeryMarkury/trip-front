@@ -1,7 +1,7 @@
 import {
 	configureStore,
 	createSerializableStateInvariantMiddleware,
-	Tuple,
+	// Tuple,
 } from "@reduxjs/toolkit";
 import { tripsReducer } from "./tripsSlice.js";
 import { filterReducer } from "./filterSlice";
@@ -36,7 +36,7 @@ export const store = configureStore({
 		trips: tripsReducer,
 		filter: filterReducer,
 	},
-	middleware: () => new Tuple(serializableMiddleware),
+	middleware: getDefaultMiddleware => getDefaultMiddleware().concat(serializableMiddleware),
 	devTools: process.env.NODE_ENV === "development",
 });
 
