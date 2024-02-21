@@ -1,4 +1,8 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {
+	configureStore,
+	createSerializableStateInvariantMiddleware,
+	Tuple,
+} from "@reduxjs/toolkit";
 import { tripsReducer } from "./tripsSlice.js";
 import { filterReducer } from "./filterSlice";
 import { authReducer } from "./auth/slice.js";
@@ -14,19 +18,17 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const middleware = [
-	...getDefaultMiddleware({
-		serializableCheck: {
-			ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-		},
-	}),
-];
-
 const authPersistConfig = {
 	key: "auth",
 	storage,
 	whitelist: ["token"],
 };
+
+const ignoredActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER];
+
+const serializableMiddleware = createSerializableStateInvariantMiddleware({
+	ignoredActions,
+});
 
 export const store = configureStore({
 	reducer: {
@@ -34,7 +36,7 @@ export const store = configureStore({
 		trips: tripsReducer,
 		filter: filterReducer,
 	},
-	middleware,
+	middleware: () => new Tuple(serializableMiddleware),
 	devTools: process.env.NODE_ENV === "development",
 });
 

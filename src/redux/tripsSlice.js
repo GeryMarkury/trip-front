@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { logOut } from "redux/auth/operations";
+import { logOut } from "../redux/auth/operations";
 import { fetchTrips, addTrip } from "./operations";
 
 const handlePending = state => {
