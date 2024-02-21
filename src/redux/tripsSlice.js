@@ -4,7 +4,9 @@ import { fetchTrips, addTrip } from "./operations";
 
 const handlePending = state => {
 	state.isLoading = true;
+	state.error = null;
 };
+
 const handleRejected = (state, { payload }) => {
 	state.isLoading = false;
 	state.error = payload;
@@ -17,26 +19,24 @@ const tripsSlice = createSlice({
 		isLoading: false,
 		error: null,
 	},
-	extraReducers: {
-		[fetchTrips.pending]: handlePending,
-		[fetchTrips.fulfilled](state, { payload }) {
-			state.isLoading = false;
-			state.error = null;
-			state.items = payload;
-		},
-		[fetchTrips.rejected]: handleRejected,
-		[addTrip.pending]: handlePending,
-		[addTrip.fulfilled](state, action) {
-			state.isLoading = false;
-			state.error = null;
-			state.items.push(action.payload);
-		},
-		[addTrip.rejected]: handleRejected,
-		[logOut.fulfilled](state) {
-			state.items = [];
-			state.error = null;
-			state.isLoading = false;
-		},
+	extraReducers: builder => {
+		builder
+			.addCase(fetchTrips.pending, handlePending)
+			.addCase(fetchTrips.fulfilled, (state, { payload }) => {
+				state.isLoading = false;
+				state.items = payload;
+			})
+			.addCase(fetchTrips.rejected, handleRejected)
+			.addCase(addTrip.pending, handlePending)
+			.addCase(addTrip.fulfilled, (state, { payload }) => {
+				state.isLoading = false;
+				state.items.push(payload);
+			})
+			.addCase(addTrip.rejected, handleRejected)
+			.addCase(logOut.fulfilled, state => {
+				state.items = [];
+				state.isLoading = false;
+			});
 	},
 });
 
