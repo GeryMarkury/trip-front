@@ -64,35 +64,39 @@ const Login = () => {
 				<form onSubmit={handleSubmit}>
 					<div>
 						{isRegister && (
-							<Field
-								label="First Name"
-								onBlur={handleBlur}
-								onChange={handleChange}
-								value={values.name}
-								name="firstName"
-								error={Boolean(touched.firstName) && Boolean(errors.firstName)}
-								helperText={touched.name && errors.name}
-							/>
+							<>
+								<label htmlFor="name">Your name</label>
+								<input
+									id="name"
+									onBlur={handleBlur}
+									onChange={handleChange}
+									type="text"
+									value={values.name}
+									name="name"
+								/>
+								{touched.name && errors.name ? <div>{errors.name}</div> : null}
+							</>
 						)}
-						<Field
-							label="Email"
+						<label htmlFor="email">Email</label>
+						<input
+							id="email"
 							onBlur={handleBlur}
 							onChange={handleChange}
+							type="text"
 							value={values.email}
 							name="email"
-							error={Boolean(touched.email) && Boolean(errors.email)}
-							helperText={touched.email && errors.email}
 						/>
-						<Field
-							label="Password"
+						{touched.email && errors.email ? <div>{errors.email}</div> : null}
+						<label htmlFor="password">Password</label>
+						<input
+							id="password"
 							type="password"
 							onBlur={handleBlur}
 							onChange={handleChange}
 							value={values.password}
 							name="password"
-							error={Boolean(touched.password) && Boolean(errors.password)}
-							helperText={touched.password && errors.password}
 						/>
+						{touched.password && errors.password ? <div>{errors.password}</div> : null}
 					</div>
 					<div>
 						<button type="submit">{isLogin ? "LOGIN" : "REGISTER"}</button>
