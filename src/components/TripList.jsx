@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectAllTrips, selectFilter } from "../redux/selectors";
 import { TripCard } from "./TripCard";
 
-const TripList = () => {
+const TripList = ({ openModal }) => {
 	const filter = useSelector(selectFilter);
 	const trips = useSelector(selectAllTrips);
 
@@ -26,11 +26,11 @@ const TripList = () => {
 						</li>
 					))}
 					<li key="123">
-						<div>Add trip</div>
+						<div onClick={() => openModal()}>Add trip</div>
 					</li>
 				</ul>
 			) : (
-				<div>There are no trips to display. Add trip here</div>
+				<div onClick={() => openModal()}>There are no trips to display. Add trip here</div>
 			)}
 		</>
 	);
