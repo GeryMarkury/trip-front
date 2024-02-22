@@ -1,9 +1,12 @@
 import { useEffect } from "react";
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
 import { addTrip } from "../redux/operations";
 import { useDispatch } from "react-redux";
 import { cities } from "../helpers/cities";
 import CustomCitySelect from "./CustomCitySelect";
+import css from "./Modal.module.css";
+import DatePickerField from "./DatePicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Modal = ({ onClick }) => {
 	const dispatch = useDispatch();
@@ -28,10 +31,10 @@ const Modal = ({ onClick }) => {
 
 	return (
 		<div
-			// className={css.overlay}
+			className={css.overlay}
 			onClick={handleOverlayClick}
 		>
-			<div>
+			<div className={css.modal}>
 				<button
 					type="button"
 					onClick={onClick}
@@ -48,15 +51,18 @@ const Modal = ({ onClick }) => {
 						dispatch(addTrip(values));
 						console.log(values);
 						resetForm();
+						onClick();
 					}}
 				>
-					{props => (
-						<Form>
+					{({ values, errors, touched, handleSubmit, resetForm }) => (
+						<form onSubmit={handleSubmit}>
 							<CustomCitySelect
 								label="City"
 								name="city"
 								options={cities}
 							/>
+							<DatePickerField name="timeStart" />
+							<DatePickerField name="timeEnd" />
 							<button
 								type="button"
 								onClick={onClick}
@@ -64,7 +70,7 @@ const Modal = ({ onClick }) => {
 								Cancel
 							</button>
 							<button type="submit">Save</button>
-						</Form>
+						</form>
 					)}
 				</Formik>
 			</div>
